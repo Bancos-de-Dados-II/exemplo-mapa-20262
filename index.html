@@ -12,11 +12,18 @@
     <div id="map"></div>
 
     <script>
+        const select = document.getElementById('select-municipio');
+
         fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/25/municipios')
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-            })
+                data.forEach(municipio => {
+                    const option = document.createElement('option');
+                    option.value = municipio.id;
+                    option.textContent = municipio.nome;
+                    select.appendChild(option);
+                });
+            });
     </script>
 
 </body>
