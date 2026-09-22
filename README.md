@@ -1,10 +1,10 @@
-# Aplicação de mapa dos municípios do Ceará
+# Aplicação de mapa dos municípios da Paraíba
 
-Aplicação web de exemplo que combina um frontend com [Leaflet](https://leafletjs.com/), uma API em Node.js e um banco PostgreSQL com a extensão [PostGIS](https://postgis.net/). O usuário seleciona um município do Ceará e visualiza sua geometria no mapa.
+Aplicação web de exemplo que combina um frontend com [Leaflet](https://leafletjs.com/), uma API em Node.js e um banco PostgreSQL com a extensão [PostGIS](https://postgis.net/). O usuário seleciona um município da Paraíba e visualiza sua geometria no mapa.
 
 ## Visão geral
 
-- O frontend carrega a lista de municípios pela API do IBGE.
+- O frontend carrega a lista de municípios pela API de localidades do IBGE.
 - Ao selecionar um município, o frontend consulta a API do backend.
 - O backend busca a geometria correspondente na tabela `municipios` e devolve o resultado em GeoJSON.
 - O mapa utiliza os tiles do OpenStreetMap.
@@ -46,11 +46,11 @@ O backend espera encontrar uma tabela chamada `municipios` com, no mínimo:
 - uma coluna `id`, contendo o código do município usado pelo IBGE;
 - uma coluna espacial `geom`, compatível com a consulta `ST_AsGeoJSON(geom)`.
 
-A criação e a carga dessa tabela não fazem parte deste repositório. Prepare o banco conforme a fonte de dados utilizada na atividade e confirme que o PostGIS está disponível.
+O script de criação dos municípios está disponível no arquivo `criar-cidades.sql`.
 
 ## Configuração do backend
 
-Crie o arquivo `back-end/.env` a partir do modelo abaixo, substituindo os valores pelos dados da sua instalação do PostgreSQL:
+Renomei o arquivo `.env.example` para `.env`, substituindo os valores pelos dados da sua instalação do PostgreSQL:
 
 ```env
 PG_HOST=localhost
@@ -87,7 +87,7 @@ O frontend atualmente consulta o backend em `http://localhost:3000`. Se a API fo
 ## Funcionalidades
 
 - Exibição de mapa interativo;
-- lista de municípios do Ceará obtida do IBGE;
+- lista de municípios da Paraíba obtida do IBGE;
 - consulta da geometria do município selecionado;
 - ajuste automático do mapa aos limites da geometria retornada.
 
@@ -99,27 +99,6 @@ O frontend atualmente consulta o backend em `http://localhost:3000`. Se a API fo
 
 O carregamento desses serviços depende de conexão com a internet.
 
-## Solução de problemas
+## Observações
 
-### A API não inicia
-
-- Confirme que o Node.js e o npm estão instalados.
-- Execute `npm install` dentro de `back-end`.
-- Verifique se o arquivo `.env` está nessa mesma pasta.
-- Confira se o PostgreSQL está acessível e se as credenciais estão corretas.
-
-### O backend não encontra um município
-
-- Confirme que a tabela se chama `municipios`.
-- Verifique se o código IBGE está armazenado na coluna `id`.
-- Confirme que a coluna `geom` contém uma geometria válida e que o PostGIS está habilitado.
-
-### O mapa ou a geometria não aparece
-
-- Verifique a conexão com a internet.
-- Confirme se o backend está em execução na porta e no endereço configurados no frontend.
-- Consulte o console do navegador e os registros do processo Node.js para identificar erros de requisição ou de banco de dados.
-
-## Licença
-
-Este projeto está distribuído sob a licença ISC, conforme definido em `back-end/package.json`.
+Por se tratar de uma aplicação didática feita em sala de aula, não foi realizado o tratamento de exceções e possíveis erros.
