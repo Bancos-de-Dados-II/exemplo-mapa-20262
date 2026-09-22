@@ -45,6 +45,15 @@
                     select.appendChild(option);
                 });
             });
+
+            select.addEventListener('change', ()=>{
+                fetch(`http://localhost:3000/municipios/${select.value}`)
+                    .then(response => response.json())
+                    .then(data =>{
+                        console.log(data);
+                    });
+            });
+
     </script>
 
 </body>
