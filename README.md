@@ -1,6 +1,6 @@
 # Aplicação de Mapa - Exemplo
 
-Uma aplicação web que exibe um mapa interativo dos municípios do Ceará, com integração de backend em Node.js e banco de dados PostgreSQL.
+Uma aplicação web que exibe um mapa interativo dos municípios da Paraíba, com integração de backend em Node.js e banco de dados PostgreSQL.
 
 ## 📋 Descrição
 
@@ -28,7 +28,7 @@ Uma aplicação web que exibe um mapa interativo dos municípios do Ceará, com 
 - Node.js (versão 14+)
 - PostgreSQL (versão 12+)
 - npm ou yarn
-- Git (opcional)
+- Git
 
 ## 🚀 Instruções de Execução
 

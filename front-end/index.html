@@ -48,7 +48,7 @@
             });
 
             select.addEventListener('change', ()=>{
-                fetch(`http://localhost:3000/municipios/${select.value}`)
+                fetch(`https://exemplo-mapa-20262.onrender.com/municipios/${select.value}`)
                     .then(response => response.json())
                     .then(data =>{
                         let jsonData = JSON.parse(data.st_asgeojson);
