@@ -1,159 +1,125 @@
-# Aplicação de Mapa - Exemplo
+# Aplicação de mapa dos municípios do Ceará
 
-Uma aplicação web que exibe um mapa interativo dos municípios do Ceará, com integração de backend em Node.js e banco de dados PostgreSQL.
+Aplicação web de exemplo que combina um frontend com [Leaflet](https://leafletjs.com/), uma API em Node.js e um banco PostgreSQL com a extensão [PostGIS](https://postgis.net/). O usuário seleciona um município do Ceará e visualiza sua geometria no mapa.
 
-## 📋 Descrição
+## Visão geral
 
-- **Frontend**: Interface web com mapa interativo usando Leaflet.js
-- **Backend**: API REST em Express.js conectada a um banco de dados PostgreSQL
-- **Dados**: Integração com API do IBGE para listar municípios
+- O frontend carrega a lista de municípios pela API do IBGE.
+- Ao selecionar um município, o frontend consulta a API do backend.
+- O backend busca a geometria correspondente na tabela `municipios` e devolve o resultado em GeoJSON.
+- O mapa utiliza os tiles do OpenStreetMap.
 
-## 🔧 Tecnologias Utilizadas
+## Tecnologias
 
-### Frontend
-- HTML5
-- Leaflet.js (mapa interativo)
-- OpenStreetMap (tiles do mapa)
-- API IBGE (dados de municípios)
+- HTML5 e JavaScript
+- Leaflet 1.9.4
+- Node.js com Express
+- PostgreSQL e PostGIS
+- `pg`, `dotenv` e `cors`
+- API de localidades do IBGE
 
-### Backend
-- Node.js
-- Express.js
-- PostgreSQL
-- dotenv (variáveis de ambiente)
-- CORS (compartilhamento de recursos)
+## Pré-requisitos
 
-## 📦 Pré-requisitos
+Para executar o projeto, é necessário ter instalado:
 
-- Node.js (versão 14+)
-- PostgreSQL (versão 12+)
-- npm ou yarn
-- Git (opcional)
+- Node.js 14 ou superior e npm;
+- PostgreSQL 12 ou superior;
+- PostGIS habilitado no banco de dados;
+- um navegador com acesso à internet para carregar os serviços externos.
 
-## 🚀 Instruções de Execução
+## Estrutura do projeto
 
-### 1. Clonar/Baixar o Repositório
-
-```bash
-cd /home/paulo/Área\ de\ trabalho/exemplo-mapa-20262
+```text
+.
+├── back-end/
+│   ├── index.js
+│   └── package.json
+├── front-end/
+│   └── index.html
+└── README.md
 ```
 
-### 2. Configurar Backend
+## Configuração do banco de dados
 
-#### 2.1 Instalar dependências
+O backend espera encontrar uma tabela chamada `municipios` com, no mínimo:
 
-```bash
-cd back-end
-npm install
-```
+- uma coluna `id`, contendo o código do município usado pelo IBGE;
+- uma coluna espacial `geom`, compatível com a consulta `ST_AsGeoJSON(geom)`.
 
-#### 2.2 Criar arquivo `.env`
+A criação e a carga dessa tabela não fazem parte deste repositório. Prepare o banco conforme a fonte de dados utilizada na atividade e confirme que o PostGIS está disponível.
 
-Na pasta `back-end`, crie um arquivo `.env` com as seguintes variáveis:
+## Configuração do backend
+
+Crie o arquivo `back-end/.env` a partir do modelo abaixo, substituindo os valores pelos dados da sua instalação do PostgreSQL:
 
 ```env
 PG_HOST=localhost
 PG_PORT=5432
 PG_USER=seu_usuario
 PG_PASSWORD=sua_senha
-PG_DATABASE=seu_banco_dados
+PG_DATABASE=seu_banco
 ```
 
-**Nota**: Substitua os valores com as credenciais do seu banco de dados PostgreSQL.
+O arquivo `.env` contém credenciais e não deve ser versionado.
 
-#### 2.3 Executar o Backend
+Depois, instale as dependências e inicie a API:
 
 ```bash
+cd back-end
+npm install
 npm start
-# ou
-node index.js
 ```
 
-O servidor iniciará na porta **3000**: `http://localhost:3000`
+A API ficará disponível na porta `3000`. O endpoint utilizado pelo frontend é:
 
-### 3. Executar Frontend
-
-#### 3.1 Abrir no navegador
-
-Navegue até o arquivo HTML no frontend:
-
-```bash
-# Abra manualmente o arquivo front-end/index.html no navegador
-# ou use um servidor HTTP local
+```text
+GET http://localhost:3000/municipios/:codigo
 ```
 
-**Opção com Python (se tiver instalado):**
-```bash
-cd front-end
-python3 -m http.server 8000
-# Acesse: http://localhost:8000
-```
+Por exemplo, substitua `:codigo` pelo código IBGE de um município existente na tabela `municipios`.
 
-**Opção com Live Server (VS Code):**
-- Instale a extensão "Live Server" no VS Code
-- Clique com botão direito no `index.html` e selecione "Open with Live Server"
+## Execução do frontend
 
-## 📁 Estrutura do Projeto
+O arquivo `front-end/index.html` pode ser aberto diretamente no navegador. Se o navegador bloquear requisições por causa de CORS ao abrir o arquivo localmente, sirva a pasta `front-end` com qualquer servidor HTTP estático e acesse a URL fornecida por ele.
 
-```
-exemplo-mapa-20262/
-├── README.md                    # Este arquivo
-├── back-end/
-│   ├── index.js                # Arquivo principal do backend
-│   ├── package.json            # Dependências do projeto
-│   └── .env                    # Variáveis de ambiente (criar)
-└── front-end/
-    └── index.html              # Interface web
-```
+O frontend atualmente consulta o backend em `http://localhost:3000`. Se a API for executada em outro endereço, atualize essa URL no arquivo `front-end/index.html` antes de publicar a aplicação.
 
-## 🗺️ Funcionalidades
+## Funcionalidades
 
-- Visualizar mapa interativo com centro em Fortaleza, CE
-- Selecionar e listar municípios do Ceará
-- Interface responsiva e fácil de usar
-- Integração com dados públicos do IBGE
+- Exibição de mapa interativo;
+- lista de municípios do Ceará obtida do IBGE;
+- consulta da geometria do município selecionado;
+- ajuste automático do mapa aos limites da geometria retornada.
 
-## ⚙️ Configuração do Banco de Dados
+## Serviços externos e atribuições
 
-Para criar o banco de dados PostgreSQL, conecte-se ao seu PostgreSQL e execute:
+- Dados dos municípios: [API de localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades);
+- Mapa e tiles: [OpenStreetMap](https://www.openstreetmap.org/copyright);
+- Biblioteca de mapas: [Leaflet](https://leafletjs.com/).
 
-```sql
-CREATE DATABASE seu_banco_dados;
+O carregamento desses serviços depende de conexão com a internet.
 
--- Adicione suas tabelas conforme necessário
--- Exemplo:
--- CREATE TABLE municipios (
---     id SERIAL PRIMARY KEY,
---     nome VARCHAR(100),
---     latitude DECIMAL(10, 8),
---     longitude DECIMAL(11, 8)
--- );
-```
+## Solução de problemas
 
-## 🐛 Solução de Problemas
+### A API não inicia
 
-**Erro: "Cannot find module 'express'"**
-- Execute `npm install` na pasta `back-end`
+- Confirme que o Node.js e o npm estão instalados.
+- Execute `npm install` dentro de `back-end`.
+- Verifique se o arquivo `.env` está nessa mesma pasta.
+- Confira se o PostgreSQL está acessível e se as credenciais estão corretas.
 
-**Erro: "Connection refused" no banco de dados**
-- Verifique se PostgreSQL está rodando
-- Verifique as credenciais no arquivo `.env`
-- Confirme o host e porta
+### O backend não encontra um município
 
-**Mapa não carrega no frontend**
-- Verifique a conexão com a internet (Leaflet e OpenStreetMap precisam de acesso)
-- Verifique o console do navegador para mensagens de erro
+- Confirme que a tabela se chama `municipios`.
+- Verifique se o código IBGE está armazenado na coluna `id`.
+- Confirme que a coluna `geom` contém uma geometria válida e que o PostGIS está habilitado.
 
-## 📝 Notas Adicionais
+### O mapa ou a geometria não aparece
 
-- O mapa está centralizado em Fortaleza, Ceará (coordenadas: -6.8864, -38.5575)
-- A zoom inicial é 14
-- Os dados dos municípios são carregados da API pública do IBGE
+- Verifique a conexão com a internet.
+- Confirme se o backend está em execução na porta e no endereço configurados no frontend.
+- Consulte o console do navegador e os registros do processo Node.js para identificar erros de requisição ou de banco de dados.
 
-## 📄 Licença
+## Licença
 
-ISC
-
----
-
-**Desenvolvido em**: 22 de setembro de 2026
+Este projeto está distribuído sob a licença ISC, conforme definido em `back-end/package.json`.
